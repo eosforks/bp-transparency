@@ -1,0 +1,37 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'run', 'dev' ]
+2 info using npm@5.5.1
+3 info using node@v8.9.1
+4 verbose config Skipping project config: /app/.npmrc. (matches userconfig)
+5 verbose run-script [ 'predev', 'dev', 'postdev' ]
+6 info lifecycle bpaccountability@1.0.0~predev: bpaccountability@1.0.0
+7 info lifecycle bpaccountability@1.0.0~dev: bpaccountability@1.0.0
+8 verbose lifecycle bpaccountability@1.0.0~dev: unsafe-perm in lifecycle true
+9 verbose lifecycle bpaccountability@1.0.0~dev: PATH: /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/app/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+10 verbose lifecycle bpaccountability@1.0.0~dev: CWD: /app
+11 silly lifecycle bpaccountability@1.0.0~dev: Args: [ '-c', 'nuxt' ]
+12 silly lifecycle bpaccountability@1.0.0~dev: Returned: code: 1  signal: null
+13 info lifecycle bpaccountability@1.0.0~dev: Failed to exec dev script
+14 verbose stack Error: bpaccountability@1.0.0 dev: `nuxt`
+14 verbose stack Exit status 1
+14 verbose stack     at EventEmitter.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-lifecycle/index.js:280:16)
+14 verbose stack     at emitTwo (events.js:126:13)
+14 verbose stack     at EventEmitter.emit (events.js:214:7)
+14 verbose stack     at ChildProcess.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-lifecycle/lib/spawn.js:55:14)
+14 verbose stack     at emitTwo (events.js:126:13)
+14 verbose stack     at ChildProcess.emit (events.js:214:7)
+14 verbose stack     at maybeClose (internal/child_process.js:925:16)
+14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:209:5)
+15 verbose pkgid bpaccountability@1.0.0
+16 verbose cwd /app
+17 verbose Linux 4.9.87-linuxkit-aufs
+18 verbose argv "/usr/local/bin/node" "/usr/local/bin/npm" "run" "dev"
+19 verbose node v8.9.1
+20 verbose npm  v5.5.1
+21 error code ELIFECYCLE
+22 error errno 1
+23 error bpaccountability@1.0.0 dev: `nuxt`
+23 error Exit status 1
+24 error Failed at the bpaccountability@1.0.0 dev script.
+24 error This is probably not a problem with npm. There is likely additional logging output above.
+25 verbose exit [ 1, true ]

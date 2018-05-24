@@ -1,25 +1,50 @@
 <template>
-    <div class="transactions">
-        <!-- <div class="alert" v-if="unformatted > 0">
-            {{ unformatted }} transaction(s) had a memo that could not be parsed.
-        </div> -->
-        <h2>Transactions</h2>
-        <pre>{{ memos }}</pre>
-    </div>
+    <v-card>
+        <v-card-title>
+            <h3>TRANSACTIONS</h3>
+            <v-spacer></v-spacer>
+            <v-text-field
+                v-model="search"
+                append-icon="search"
+                label="Search"
+                single-line
+                hide-details
+            ></v-text-field>
+        </v-card-title>
+        <v-data-table
+            :headers="keys"
+            :items="transaction_data"
+            :search="search"
+            :disable-initial-sort="true"
+            v-if="transaction_data != null"
+        >
+            <template slot="items" slot-scope="props">
+                <td v-for="key in keys" :key="key.value">{{ props.item[key.value] }}</td>
+            </template>
+            <v-alert slot="no-results" :value="true" color="error" icon="warning">
+                Your search for "{{ search }}" found no results.
+            </v-alert>
+        </v-data-table>
+    </v-card>
 </template>
 
 <script>
 import Eos from 'eosjs'
 export default {
-  data () {
+  data() {
     return {
+      keys: [
+        { text: 'QTY', value: 'quantity' },
+        { text: 'From', value: 'from' },
+        { text: 'To', value: 'to' }
+      ],
       accountName: process.env.eosAccountName,
       eos: null,
       result: null,
       transactions: null,
+      transaction_data: null,
       transfers: null,
-      memos: null,
-      unformatted: 0,
+      search: '',
       chartData: null
     }
   },
@@ -88,43 +113,72 @@ export default {
           transfers.push(data.data);
         });
       });
-      
-      vm.transfers = transfers
 
+      vm.transfers = transfers
       vm.parseMemos(vm.transfers)
     },
     parseMemos (transfers) {
       let vm = this
-      let memos = []
+      let transaction_data = []
+      let keys = vm.keys
       transfers.forEach(transfer => {
-        let memo = transfer.memo;
-        memo.replace(/\\\//g, "/");
-        try {
-          memo = JSON.parse(memo)
-          memo.quantity = parseFloat(transfer.quantity.slice(0, -4))
-          memos.push(memo)
+        let memo = transfer.memo
+        memo.replace(/\\\//g, "/")
+        // preserve newlines, etc - use valid JSON
+        memo = memo.replace(/\\n/g, "\\n")
+                   .replace(/\\'/g, "\\'")
+                   .replace(/\\"/g, '\\"')
+                   .replace(/\\&/g, "\\&")
+                   .replace(/\\r/g, "\\r")
+                   .replace(/\\t/g, "\\t")
+                   .replace(/\\b/g, "\\b")
+                   .replace(/\\f/g, "\\f");
+        // remove non-printable and other non-valid JSON chars
+        memo = memo.replace(/[\u0000-\u0019]+/g,"");
+        if (memo.search('{"') != -1) {
+            memo = memo.slice(memo.search('{"'))
+            try {
+                memo = JSON.parse(memo)
+                Object.keys(memo).forEach(key => {
+                    let newkey = {
+                        text: key.charAt(0).toUpperCase() + key.slice(1),
+                        value: key
+                    }
+                    if (!vm.containsKey(newkey, keys)) {
+                        keys.push(newkey);
+                    }
+                })
+            }
+            catch(err) {
+                memo = {}
+            }
+        } else {
+            memo = {}
         }
-        catch(err) {
-          vm.unformatted++
-        }
-      });
-      vm.memos = memos
+        memo.quantity = parseFloat(transfer.quantity.slice(0, -4))
+        memo.from = transfer.from
+        memo.to = transfer.to
 
-      vm.formatBarChartData(vm.memos)
+        transaction_data.push(memo)
+      });
+
+      vm.transaction_data = transaction_data
+      vm.keys = keys
+      vm.formatBarChartData(vm.transaction_data)
     },
-    formatBarChartData(memos) {
-        let chunkedData = organize(memos, ['class']);
-        
+    formatBarChartData(transaction_data) {
+        let chunkedData = this.organize(transaction_data, ['class']);
+
         let labels = []
         let data = []
 
-        for (var key in chunkedData) {
+        for (let key in chunkedData) {
             labels.push(key)
         }
-        for (var key in chunkedData) {
+        for (let key in chunkedData) {
             let total = 0
-            chunkedData[key].forEach(memo => {
-                total += memo.quantity
+            chunkedData[key].forEach(transaction_data => {
+                total += transaction_data.quantity
             })
             data.push(total)
         }
@@ -140,6 +194,23 @@ export default {
         this.chartData = chartData;
         this.$store.dispatch('changeBarChartData', chartData)
     },
+    organize(rows, groupBy) {
+        let last = groupBy.length - 1;
+        return rows.reduce ( (res, obj) => {
+            groupBy.reduce( (res, grp, i) =>
+            res[obj[grp]] || (res[obj[grp]] = i == last ? [] : {}), res).push(obj);
+            return res;
+        }, {});
+    },
+    containsKey(obj, list) {
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].value == obj.value) {
+                return true;
+            }
+        }
+
+        return false;
+    },
     removeEmpties(array) {
       return array.filter(a => {
         return a.length
@@ -147,33 +218,4 @@ export default {
     }
   }
 }
-function organize(rows, groupBy) {
-    var last = groupBy.length - 1;
-    return rows.reduce ( (res, obj) => {
-        groupBy.reduce( (res, grp, i) => 
-            res[obj[grp]] || (res[obj[grp]] = i == last ? [] : {}), res).push(obj);
-        return res;
-    }, {});
-}
 </script>
-
-<style lang="scss">
-.transactions {
-    flex: 1;
-    max-width: 520px;
-    border: 1px solid rgb(128, 128, 128);
-    background: rgb(239, 239, 239);
-    padding: 15px;
-    font-size: 14px;
-    h2 {
-        margin-bottom: 20px;
-    }
-    .alert {
-        padding: 30px;
-        margin: 0 0 15px 0;
-        text-align: center;
-        background-color: rgb(255, 158, 158);
-        border: 1px solid rgb(255, 86, 86)
-    }
-}
-</style>

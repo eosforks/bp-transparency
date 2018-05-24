@@ -1,0 +1,39 @@
+$theme := {
+  primary: #9c27b0
+  accent: #ce93d8
+  secondary: #424242
+  info: #0D47A1
+  warning: #ffb300
+  error: #B71C1C
+  success: #2E7D32
+}
+@require '~vuetify/src/stylus/main.styl'
+
+.chart {
+  margin-right: 15px
+  .card {
+    padding: 20px
+    overflow-y: auto
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px
+  height: 10px
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555
+}

@@ -3,14 +3,14 @@ module.exports = {
   ** Environment
   */
   env: {
-    blockchainEndpoint: '<URL>',
-    eosAccountName: '<ACCOUNT>'
+    blockchainEndpoint: 'http://workshop.eosocal.io',
+    eosAccountName: 'eosocal'
   },
   /*
   ** CSS and SCSS
   */
   css: [
-    { src: '~/assets/scss/main.scss', lang: 'scss' },
+    { src: '~/assets/css/app.styl', lang: 'styl' }
   ],
   /*
   ** Headers of the page
@@ -23,7 +23,8 @@ module.exports = {
       { hid: 'description', name: 'description', content: 'Project to track the accountability of block producers' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' }
     ]
   },
   /*
@@ -47,7 +48,10 @@ module.exports = {
         })
       }
     },
-    vendor: ['eosjs']
+    vendor: [
+      'eosjs'
+    ],
+    extractCSS: true
   },
   /*
   ** Watchers explicitly stated for Windows
@@ -61,6 +65,7 @@ module.exports = {
   ** Plugins
   */
   plugins: [
-    '~/plugins/eosjs'
+    '~/plugins/eosjs',
+    '~/plugins/vuetify'
   ]
 }

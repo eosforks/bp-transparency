@@ -3,7 +3,7 @@
     <v-flex class="charts" xs12 sm12 md4>
       <Charts></Charts>
     </v-flex>
-    <v-flex class="table" xs12 sm12 md8>
+    <v-flex xs12 sm12 md8>
       <Table></Table>
     </v-flex>
   </v-layout>
@@ -124,14 +124,14 @@ export default {
         transactions.push(memo)
       })
 
-      this.$store.dispatch('saveTransactionData', {
+      this.$store.dispatch('saveTableData', {
         'transactions' : transactions,
         'columns' : columns
       })
       vm.formatChartsData(transactions)
     },
     formatChartsData(transactions) {
-      let chunkedData = this.organize(transactions, ['class']);
+      let chunkedData = this.organize(transactions, process.env.chartGroupBy);
 
       let labels = []
       let data = []
@@ -187,4 +187,3 @@ export default {
   }
 }
 </script>
-

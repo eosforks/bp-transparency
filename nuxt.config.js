@@ -5,7 +5,9 @@ module.exports = {
   env: {
     blockchainEndpoint: 'http://workshop.eosocal.io',
     eosAccountName: 'eosocal',
-    rowsPerPage: 9
+    rowsPerPage: 9,
+    chartFilters: [],
+    chartGroupBy: ['class']
   },
   /*
   ** CSS and SCSS

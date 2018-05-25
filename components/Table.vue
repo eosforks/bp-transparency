@@ -12,14 +12,14 @@
             ></v-text-field>
         </v-card-title>
         <v-data-table
-            :headers="transactionData.columns"
-            :items="transactionData.transactions"
+            :headers="tableData.columns"
+            :items="tableData.transactions"
             :search="search"
             :disable-initial-sort="true"
             :pagination.sync="pagination"
             hide-actions
             class="elevation-1"
-            v-if="transactionData.columns != null"
+            v-if="tableData.columns != null"
         >
             <template slot="headerCell" slot-scope="props">
                 <v-tooltip bottom>
@@ -32,7 +32,7 @@
                 </v-tooltip>
             </template>
             <template slot="items" slot-scope="props">
-                <td v-for="column in transactionData.columns" :key="column.value">{{ props.item[column.value] }}</td>
+                <td v-for="column in tableData.columns" :key="column.value">{{ props.item[column.value] }}</td>
             </template>
             <v-alert slot="no-results" :value="true" color="error" icon="warning">
                 Your search for "{{ search }}" found no results.
@@ -59,7 +59,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'transactionData'
+      'tableData'
     ]),
     pages() {
       if (this.pagination.rowsPerPage == null || this.pagination.totalItems == null)

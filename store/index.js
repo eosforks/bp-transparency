@@ -3,32 +3,32 @@ import Vuex from 'vuex'
 const store = () => {
   return new Vuex.Store({
     state: {
-      transactionData: {
+      tableData: {
         transactions: null,
         columns: null
       },
       chartData: {}
     },
     getters: {
-      transactionData: state => {
-        return state.transactionData
+      tableData: state => {
+        return state.tableData
       },
       chartData: state => {
         return state.chartData
       }
     },
     actions: {
-      saveTransactionData(context, transactionData) {
-        context.commit('saveTransactionData', transactionData)
+      saveTableData(context, tableData) {
+        context.commit('saveTableData', tableData)
       },
       saveChartData(context, chartData) {
         context.commit('saveChartData', chartData)
       }
     },
     mutations: {
-      saveTransactionData(state, transactionData) {
-        state.transactionData.transactions = transactionData.transactions
-        state.transactionData.columns = transactionData.columns
+      saveTableData(state, tableData) {
+        state.tableData.transactions = tableData.transactions
+        state.tableData.columns = tableData.columns
       },
       saveChartData(state, chartData) {
         state.chartData = chartData

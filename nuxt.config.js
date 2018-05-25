@@ -4,7 +4,8 @@ module.exports = {
   */
   env: {
     blockchainEndpoint: 'http://workshop.eosocal.io',
-    eosAccountName: 'eosocal'
+    eosAccountName: 'eosocal',
+    rowsPerPage: 9
   },
   /*
   ** CSS and SCSS

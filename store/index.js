@@ -1,26 +1,40 @@
 import Vuex from 'vuex'
 
-const createStore = () => {
+const store = () => {
   return new Vuex.Store({
     state: {
-        barChartData: {}
+      transactionData: {
+        transactions: null,
+        columns: null
+      },
+      chartData: {}
     },
     getters: {
-        barChartData: state => {
-            return state.barChartData
-        }
-    },
-    mutations: {
-      changeBarChartData (state, payload) {
-        state.barChartData = payload
+      transactionData: state => {
+        return state.transactionData
+      },
+      chartData: state => {
+        return state.chartData
       }
     },
     actions: {
-        changeBarChartData (context, payload) {
-            context.commit('changeBarChartData', payload)
-        }
+      saveTransactionData(context, transactionData) {
+        context.commit('saveTransactionData', transactionData)
+      },
+      saveChartData(context, chartData) {
+        context.commit('saveChartData', chartData)
+      }
     },
+    mutations: {
+      saveTransactionData(state, transactionData) {
+        state.transactionData.transactions = transactionData.transactions
+        state.transactionData.columns = transactionData.columns
+      },
+      saveChartData(state, chartData) {
+        state.chartData = chartData
+      }
+    }
   })
 }
 
-export default createStore
+export default store

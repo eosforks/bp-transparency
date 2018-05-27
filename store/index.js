@@ -7,22 +7,29 @@ const store = () => {
         transactions: null,
         columns: null
       },
-      chartData: {}
+      barChartData: {},
+      pieChartData: {}
     },
     getters: {
       tableData: state => {
         return state.tableData
       },
-      chartData: state => {
-        return state.chartData
+      barChartData: state => {
+        return state.barChartData
+      },
+      pieChartData: state => {
+        return state.pieChartData
       }
     },
     actions: {
       saveTableData(context, tableData) {
         context.commit('saveTableData', tableData)
       },
-      saveChartData(context, chartData) {
-        context.commit('saveChartData', chartData)
+      saveBarChartData(context, barChartData) {
+        context.commit('saveBarChartData', barChartData)
+      },
+      savePieChartData(context, pieChartData) {
+        context.commit('savePieChartData', pieChartData)
       }
     },
     mutations: {
@@ -30,8 +37,11 @@ const store = () => {
         state.tableData.transactions = tableData.transactions
         state.tableData.columns = tableData.columns
       },
-      saveChartData(state, chartData) {
-        state.chartData = chartData
+      saveBarChartData(state, barChartData) {
+        state.barChartData = barChartData
+      },
+      savePieChartData(state, pieChartData) {
+        state.pieChartData = pieChartData
       }
     }
   })

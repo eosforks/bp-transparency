@@ -6,8 +6,29 @@ module.exports = {
     blockchainEndpoint: 'http://workshop.eosocal.io',
     eosAccountName: 'eosocal',
     rowsPerPage: 9,
-    chartFilters: [],
-    chartGroupBy: ['class']
+    charts: [
+      {
+        type: 'bar',
+        groupBy: ['class'],
+        filters: {
+          type: 'expense',
+          subclass: null,
+          operation: 'AND'
+        },
+        showUndefined: true
+      },
+      {
+        type: 'pie',
+        groupBy: ['category'],
+        filters: {
+          type: 'refund',
+          class: 'administrative',
+          account: 'rent',
+          operation: 'OR'
+        },
+        showUndefined: true
+      }
+    ]
   },
   /*
   ** CSS and SCSS
@@ -27,7 +48,8 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' }
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' },
+      { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' }
     ]
   },
   /*

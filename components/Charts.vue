@@ -1,14 +1,12 @@
 <template>
     <v-card :style="height">
-        <BarChart :chartData="chartData"></BarChart>
-        <DoughnutChart :chartData="chartData"></DoughnutChart>
-        <PieChart :chartData="chartData"></PieChart>
+        <BarChart :chartData="barChartData"></BarChart>
+        <PieChart :chartData="pieChartData"></PieChart>
     </v-card>
 </template>
 
 <script>
 import BarChart from '~/components/charts/BarChart.vue'
-import DoughnutChart from '~/components/charts/DoughnutChart.vue'
 import PieChart from '~/components/charts/PieChart.vue'
 import { mapGetters } from 'vuex'
 
@@ -20,12 +18,12 @@ export default {
   },
   components: {
     BarChart,
-    DoughnutChart,
     PieChart
   },
   computed: {
     ...mapGetters([
-      'chartData'
+      'barChartData',
+      'pieChartData'
     ])
   },
   mounted() {

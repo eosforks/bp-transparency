@@ -32,7 +32,13 @@
                 </v-tooltip>
             </template>
             <template slot="items" slot-scope="props">
-                <td v-for="column in tableData.columns" :key="column.value">{{ props.item[column.value] }}</td>
+                <td v-for="column in tableData.columns" :key="column.value">
+                    <span v-if="column.value != 'raw_memo'">{{ props.item[column.value] }}</span>
+                    <v-tooltip bottom v-else>
+                        <i class="fa fa-ellipsis-h" slot="activator"></i>
+                        <span>{{ props.item.raw_memo }}</span>
+                    </v-tooltip>
+                </td>
             </template>
             <v-alert slot="no-results" :value="true" color="error" icon="warning">
                 Your search for "{{ search }}" found no results.

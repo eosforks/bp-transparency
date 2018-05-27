@@ -56,7 +56,7 @@ export default {
         // Only grab transfers
         results.forEach(result => {
           transfers.push(result.transaction.transaction.actions.filter(action => {
-            if (action.name == "transfer") {
+            if (action.name == 'transfer') {
               return action
             }
           }));
@@ -85,18 +85,18 @@ export default {
       ]
       transfers.forEach(transfer => {
         let memo = transfer.memo
-        memo.replace(/\\\//g, "/")
+        memo.replace(/\\\//g, '/')
         // preserve newlines, etc - use valid JSON
-        memo = memo.replace(/\\n/g, "\\n")
+        memo = memo.replace(/\\n/g, '\\n')
                    .replace(/\\'/g, "\\'")
                    .replace(/\\"/g, '\\"')
-                   .replace(/\\&/g, "\\&")
-                   .replace(/\\r/g, "\\r")
-                   .replace(/\\t/g, "\\t")
-                   .replace(/\\b/g, "\\b")
-                   .replace(/\\f/g, "\\f");
+                   .replace(/\\&/g, '\\&')
+                   .replace(/\\r/g, '\\r')
+                   .replace(/\\t/g, '\\t')
+                   .replace(/\\b/g, '\\b')
+                   .replace(/\\f/g, '\\f');
         // remove non-printable and other non-valid JSON chars
-        memo = memo.replace(/[\u0000-\u0019]+/g, "");
+        memo = memo.replace(/[\u0000-\u0019]+/g, '');
         if (memo.search('{"') != -1) {
           memo = memo.slice(memo.search('{"'))
           try {
@@ -120,8 +120,14 @@ export default {
         memo.quantity = parseFloat(transfer.quantity.slice(0, -4))
         memo.from = transfer.from
         memo.to = transfer.to
+        memo.raw_memo = transfer.memo
 
         transactions.push(memo)
+      })
+
+      columns.push({
+        text: 'Raw Memo',
+        value: 'raw_memo'
       })
 
       this.$store.dispatch('saveTableData', {
@@ -131,36 +137,87 @@ export default {
       vm.formatChartsData(transactions)
     },
     formatChartsData(transactions) {
-      let chunkedData = this.organize(transactions, process.env.chartGroupBy);
+      let config = process.env.charts
+      for (let i = 0; i < config.length; i++) {
+        let filteredData = []
+        let filters = config[i].filters
+        if (filters['operation'] == 'AND') {
+          transactions.filter(transaction => {
+            let flag = 0
+            for (let key in filters)
+            {
+              if (key != 'operation') {
+                if (transaction[key] != filters[key]) {
+                  flag = 1
+                }
+              }
+            }
+            if (flag == 0) {
+              filteredData.push(transaction)
+            }
+          })
+        } else if (filters['operation'] == 'OR') {
+          transactions.filter(transaction => {
+            let flag = 0
+            for (let key in filters)
+            {
+              if (key != 'operation') {
+                if (transaction[key] == filters[key]) {
+                  flag = 1
+                }
+              }
+            }
+            if (flag == 1) {
+              filteredData.push(transaction)
+            }
+          })
+        }
+        let chunkedData = this.organize(filteredData, config[i].groupBy);
+        let labels = []
 
-      let labels = []
-      let data = []
+        let data = []
 
-      for (let key in chunkedData){
-        labels.push(key)
-      }
-      for (let key in chunkedData){
-        let total = 0
-        chunkedData[key].forEach(transaction => {
-          total += transaction.quantity
-        })
-        data.push(total)
-      }
-      let chartData = {
-        labels: labels,
-        datasets: [{
-          label: 'Classes',
-          backgroundColor: [
-            '#41B883',
-            '#E46651',
-            '#00D8FF',
-            '#DD1B16'
-          ],
-          data: data
-        }]
-      }
+        for (let key in chunkedData){
+          if (key == 'undefined'){
+            if (config[i]['showUndefined']){
+              let total = 0
+              labels.push(key)
+              chunkedData[key].forEach(transaction => {
+                total += transaction.quantity
+              })
+              data.push(total)
+            }
+          } else {
+            let total = 0
+            labels.push(key)
+            chunkedData[key].forEach(transaction => {
+              total += transaction.quantity
+            })
+            data.push(total)
+          }
+        }
+        let colors = []
+        for (let i = 0; i < data.length; i++){
+          colors.push('#'+(Math.random()*0xFFFFFF<<0).toString(16))
+        }
+        let backgroundColor
+        if (config[i].type == 'bar')
+        {
+          backgroundColor = colors[0]
+        } else {
+          backgroundColor = colors
+        }
+        let chartData = {
+          labels: labels,
+          datasets: [{
+            label: config[i].groupBy[0],
+            backgroundColor: backgroundColor,
+            data: data
+          }]
+        }
 
-      this.$store.dispatch('saveChartData', chartData)
+        this.$store.dispatch('save' + config[i].type.charAt(0).toUpperCase() + config[i].type.slice(1) + 'ChartData', chartData)
+      }
     },
     containsColumn(new_column, columns) {
       for (let i = 0; i < columns.length; i++){

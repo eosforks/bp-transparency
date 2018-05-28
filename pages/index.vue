@@ -196,24 +196,29 @@ export default {
             data.push(total)
           }
         }
-        let colors = []
-        for (let i = 0; i < data.length; i++){
-          colors.push('#'+(Math.random()*0xFFFFFF<<0).toString(16))
-        }
-        let backgroundColor
+        let chartData
         if (config[i].type == 'bar')
         {
-          backgroundColor = colors[0]
+          chartData = {
+            labels: labels,
+            datasets: [{
+              label: config[i].groupBy[0],
+              backgroundColor: 'rgb(255, 153, 0)',
+              data: data
+            }]
+          }
         } else {
-          backgroundColor = colors
-        }
-        let chartData = {
-          labels: labels,
-          datasets: [{
-            label: config[i].groupBy[0],
-            backgroundColor: backgroundColor,
-            data: data
-          }]
+          let colors = []
+          for (let i = 0; i < data.length; i++) {
+            colors.push('#' + (Math.random() * 0xFFFFFF << 0).toString(16))
+          }
+          chartData = {
+            labels: labels,
+            datasets: [{
+              backgroundColor: colors,
+              data: data
+            }]
+          }
         }
 
         this.$store.dispatch('save' + config[i].type.charAt(0).toUpperCase() + config[i].type.slice(1) + 'ChartData', chartData)

@@ -88,11 +88,11 @@ Please join us on in our Telegram channel for discussions around this project: <
 
 Clone the repository via this link: https://github.com/EOSoCal/bp-transparency.git
 
--   Open the terminal and run "npm install" to install all the dependencies
+-   Open the terminal and run "npm install" to install all the dependencies.
 
     If you don't have npm, download and install node.js and npm via this link: https://nodejs.org/en/download/
 
--   Configure env variables
+-   Configure env variables.
 
     head to `nuxt.config.js` and update the following with your blockchain's endpoint and the account you're interested in:
 
@@ -110,8 +110,68 @@ env: {
           subclass: null,  // Value needs to be 'null' in case you need specific column to be empty
           operation: 'AND' or 'OR' // Do 'AND' or 'OR' operation for parameters
         },
-        showUndefined: true // Check whether chart shows "undefined" data or not.
+        showUndefined: true // Check whether chart shows "undefined" data or not
       }
     ]
 },
 ```
+
+## Add new chart
+
+You can get the available chart list in this link:  https://github.com/apertureless/vue-chartjs/
+
+1.  Head to `nuxt.config.js` and add new chart configuration.
+
+2.  Head to `store\index.js` and add new variable, getter, action and mutation, like already existing `barChartData` or `pieChartData`.
+
+    Here, `bar` or `pie` is chart type in chart configuration.
+
+3.  Head to `components\Charts.vue`.
+
+    -   If your new chart type is beyond bar, pie or doughnut, add the new chart component file(*.vue) in `components/charts' folder.
+
+        According to chart type, the data set format can be different.
+
+        You can find data set format in this file `pages\index.vue`, at line 230.
+
+        ```
+        chartData = {
+          labels: labels,
+          datasets: [{
+            backgroundColor: colors,
+            data: data
+          }]
+        }
+        ```
+
+    -   Import the new chart component under below code.
+
+        ```
+        import PieChart from '~/components/charts/PieChart.vue'
+        ```
+
+        register the new component.
+
+        ```
+        components: {
+          BarChart,
+          PieChart,
+          <newChart>
+        },
+        ```
+
+    -   Get the new chart data via mapGetters.
+
+        ```
+        ...mapGetters([
+          'barChartData',
+          'pieChartData',
+          <newChartData>
+        ])
+        ```
+
+    -   Display new chart data.
+
+        ```
+        <newChart :chartData="newChartData"></PieChart>
+        ```

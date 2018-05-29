@@ -92,7 +92,8 @@ Clone the repository via this link: https://github.com/EOSoCal/bp-transparency.g
 
     If you don't have npm, download and install node.js and npm via this link: https://nodejs.org/en/download/
 
--   configure env variables
+-   Configure env variables
+
     head to `nuxt.config.js` and update the following with your blockchain's endpoint and the account you're interested in:
 
 ```
@@ -102,14 +103,14 @@ env: {
     rowsPerPage: '<The number of rows per page for dataTable>',
     charts: [
       {
-        type: '<Chart_Type>',
-        groupBy: ['<any of transaction data column>'],
-        filters: { // filters the transaction data with parameters
-          type: 'expense',
-          subclass: null,
-          operation: '"AND" or "OR"' // Do "AND" or "OR" operation for parameters
+        type: '<Chart Type>', // bar, pie, doughnut, etc...
+        groupBy: ['<Any of transaction data columns>'],
+        filters: { // Filters the transaction data by parameters
+          type: 'expense', // Parameters are not bound, can be any of transaction data columns
+          subclass: null,  // Value needs to be 'null' in case you need specific column to be empty
+          operation: 'AND' or 'OR' // Do 'AND' or 'OR' operation for parameters
         },
-        showUndefined: true // check whether chart shows "undefined" data or not.
+        showUndefined: true // Check whether chart shows "undefined" data or not.
       }
     ]
 },

@@ -84,13 +84,33 @@ Possible Future Features
 
 Please join us on in our Telegram channel for discussions around this project: <https://t.me/eossocal>
 
-## Important
+## Setting up development environment
 
-When cloning and working with this tool locally, head to `nuxt.config.js` and update the following with your blockchain's endpoint and the account you're interested in:
+Clone the repository via this link: https://github.com/EOSoCal/bp-transparency.git
+
+-   Open the terminal and run "npm install" to install all the dependencies
+    If you don't have npm, download and install node.js and npm via below link
+    https://nodejs.org/en/download/
+
+-   configure env variables
+    head to `nuxt.config.js` and update the following with your blockchain's endpoint and the account you're interested in:
 
 ```
 env: {
     blockchainEndpoint: '<URL>',
-    eosAccountName: '<ACCOUNT>'
+    eosAccountName: '<ACCOUNT>',
+    rowsPerPage: '<The number of rows per page for dataTable>',
+    charts: [
+      {
+        type: '<Chart_Type>',
+        groupBy: ['<any of transaction data column>'],
+        filters: { // filters the transaction data with parameters
+          type: 'expense',
+          subclass: null,
+          operation: '"AND" or "OR"' // Do "AND" or "OR" operation for parameters
+        },
+        showUndefined: true // check whether chart shows "undefined" data or not.
+      }
+    ]
 },
 ```

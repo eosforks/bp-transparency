@@ -89,8 +89,8 @@ Please join us on in our Telegram channel for discussions around this project: <
 Clone the repository via this link: https://github.com/EOSoCal/bp-transparency.git
 
 -   Open the terminal and run "npm install" to install all the dependencies
-    If you don't have npm, download and install node.js and npm via below link
-    https://nodejs.org/en/download/
+
+    If you don't have npm, download and install node.js and npm via this link: https://nodejs.org/en/download/
 
 -   configure env variables
     head to `nuxt.config.js` and update the following with your blockchain's endpoint and the account you're interested in:

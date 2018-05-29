@@ -141,9 +141,12 @@ export default {
       for (let i = 0; i < config.length; i++) {
         let filteredData = []
         let filters = config[i].filters
-        if (filters['operation'] == 'AND') {
+        let flag = 0
+        if (filters == null || filters.length == 0 || typeof filters['operation'] == 'undefined') {
+          filteredData = transactions
+        } else if (filters['operation'] == 'AND') {
           transactions.filter(transaction => {
-            let flag = 0
+            flag = 0
             for (let key in filters)
             {
               if (key != 'operation') {
@@ -158,7 +161,7 @@ export default {
           })
         } else if (filters['operation'] == 'OR') {
           transactions.filter(transaction => {
-            let flag = 0
+            flag = 0
             for (let key in filters)
             {
               if (key != 'operation') {
@@ -172,11 +175,16 @@ export default {
             }
           })
         }
-        let chunkedData = this.organize(filteredData, config[i].groupBy);
+
+        let chunkedData = {}
+        if (config[i].groupBy == null || config[i].groupBy.length == 0) {
+          chunkedData['total'] = filteredData;
+        } else {
+          chunkedData = this.organize(filteredData, config[i].groupBy);
+        }
+
         let labels = []
-
         let data = []
-
         for (let key in chunkedData){
           if (key == 'undefined'){
             if (config[i]['showUndefined']){
@@ -196,13 +204,20 @@ export default {
             data.push(total)
           }
         }
+
         let chartData
         if (config[i].type == 'bar')
         {
+          let label
+          if (config[i].groupBy == null || config[i].groupBy.length == 0) {
+            label = 'total'
+          } else {
+            label = config[i].groupBy[0]
+          }
           chartData = {
             labels: labels,
             datasets: [{
-              label: config[i].groupBy[0],
+              label: label,
               backgroundColor: 'rgb(255, 153, 0)',
               data: data
             }]
@@ -240,8 +255,8 @@ export default {
     },
     organize(rows, groupBy) {
       let last = groupBy.length - 1;
-      return rows.reduce( (res, obj) => {
-        groupBy.reduce( (res, grp, i) =>
+      return rows.reduce((res, obj) => {
+        groupBy.reduce((res, grp, i) =>
           res[obj[grp]] || (res[obj[grp]] = i == last ? [] : {}), res).push(obj);
         return res;
       }, {});

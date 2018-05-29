@@ -128,7 +128,7 @@ You can get the available chart list in this link:  https://github.com/aperturel
 
 3.  Head to `components\Charts.vue`.
 
-    -   If your new chart type is beyond bar, pie or doughnut, add the new chart component file(*.vue) in `components/charts' folder.
+    -   If your new chart type is beyond bar, pie or doughnut, add the new chart component file(*.vue) in `components/charts` folder.
 
         According to chart type, the data set format can be different.
 
